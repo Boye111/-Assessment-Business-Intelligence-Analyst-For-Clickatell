@@ -1,0 +1,14 @@
+/*Task: Interaction Success Rate
+Objective: Determine the success rate of interactions (percentage of "Delivered"messages) for each communication channel.
+Required Output: Channel, Success_Rate
+Tables Used: interview.interactions
+Uses CASE statement to identify 'Delivered' interactions..
+Divides delivered interactions by total interactions per channel.
+Multiplies by 100 to get percentage.
+*/
+SELECT
+i.channel,
+SUM(CASE WHEN i.status = 'Delivered' THEN 1 ELSE 0 END) / COUNT(*) * 100 AS Success_Rate
+FROM
+interview.interactions i
+GROUP BY i.channel;
