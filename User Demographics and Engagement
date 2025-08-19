@@ -1,0 +1,21 @@
+/*Task: User Demographics and Engagement.
+Objective: Analyzing user engagement scores across different regions, segmented by gender, for users aged 25-40.
+Required Output: region, FEMALE average engagement scores for females aged 25-40, MALE average engagement score for males aged 25-40, Overall average engagement score for the region
+Tables Used: interview.end_users, interview.clients
+Calculates average engagement scores By gender (female and male) region wise and Overall for each region
+Provides insights into engagement patterns across different demographics
+*/
+
+SELECT
+c.region,
+avg(CASE
+WHEN e.gender = "Female" THEN e.user_engagement_score END) as FEMALE,
+avg(CASE
+WHEN e.gender = "Male" THEN e.user_engagement_score END) as MALE,
+avg(e.user_engagement_score) as Average_User_Engagement_Score
+FROM
+interview.end_users e
+JOIN interview.clients c ON e.client_id = c.client_id
+WHERE e.age BETWEEN 25 AND 40
+GROUP BY c.region
+ORDER BY c.region;
