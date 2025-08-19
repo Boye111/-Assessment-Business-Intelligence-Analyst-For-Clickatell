@@ -1,0 +1,30 @@
+/*Task: End User Activity Ranking
+Objective: Rank the end users by their total number of transactions in each region. Display
+the user ID, region, total transactions, and rank, showing only the top 3 users
+per region.
+Required Output: end_user_id, region, total_transaction, user_rank
+Tables Used: interview.clients, interview.end_users, interview..transactions
+Used window function to rank users within their respective regions
+Used ROW_NUMBER() instead of RANK() to ensure unique rankings for all users, first breaking ties.
+Added e.end_user_id ASC as a secondary sort to ensure consistent and reproducible ranking in case of ties.
+Filtered for top 3 using WHERE user_rank <= 3 to ensure exactly three rows per region.
+*/
+WITH USERRANK AS (
+SELECT
+e.end_user_id,
+c.region,
+COUNT(t.transaction_id) as total_transactions,
+ROW_NUMBER() OVER(
+PARTITION BY c.region ORDER BY COUNT(t.transaction_id) DESC, e.end_user_id ASC
+)AS user_rank
+FROM
+interview.end_users e
+JOIN interview.clients c ON e.client_id = c.client_id
+JOIN interview.transactions t ON e.end_user_id = t.end_user_id
+GROUP BY
+c.region, e.end_user_id)
+
+SELECT *
+FROM USERRANK
+WHERE user_rank <=3
+ORDER BY region, user_rank, end_user_id;
