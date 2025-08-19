@@ -1,0 +1,22 @@
+/*Task: Transaction Analysis
+Objective:Calculate the total transaction amount for each client in the past year.
+Required Output:Display the client ID, client name, and total transaction amount (successful transactions only).
+Tables Used: clients(client_id), end_users(client_id, end_user_id), transactions(end_user_id)
+Assumed A year is calculated from current date, not from start of current year. Also assumed 'successful' is the correct status value for successful transactions.
+Assumes a many-to-many relationship between clients and end users
+Uses multi-step joining:
+a. Clients to End Users via client_id
+b. End Users to Transactions via end_user_id
+Aggregated Sum total transaction amounts per client and Grouped results by client_id and client_name and ordered the result in ascending order using client ID
+*/
+SELECT
+c.client_id,
+c.client_name,
+SUM(t.transaction_amount) AS total_transaction_amount
+FROM
+interview.clients c
+JOIN interview.end_users e ON c.client_id = e.client_id
+JOIN interview.transactions t ON e.end_user_id = t.end_user_id
+WHERE t.transaction_status = "Successful" AND t.transaction_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR)
+GROUP BY c.client_id, c.client_name
+ORDER BY c.client_id ASC;
