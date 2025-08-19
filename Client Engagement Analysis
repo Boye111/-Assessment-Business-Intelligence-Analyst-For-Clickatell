@@ -1,0 +1,27 @@
+/* Task: Client Engagement Analysis
+Objective: Find top 5 clients with highest number of interactions in last 2 years
+Required Output: Client ID, Client Name, Message Direction (separated), Total Interactions
+Tables Used: 
+interview.clients (client_id, client_name, industry, region, onboarded_date)
+interview.interactions (message_id, client_id, channel, message_direction, status, timestamp)
+Assumed all interactions should be counted regardless of status. Also assumed Two years is calculated from current date, not from start of current year.
+Uses CASE statements to categorize interactions. Counts 'Inbound' and 'Outbound' messages separately. 
+Total interactions include both inbound and outbound messages. I Grouped the results by client_id and client_name then
+Ordered by total number of interactions in descending order. Limits output to top 5 clients with most interactions.
+*/
+SELECT
+c.client_id,
+c.client_name,
+ COUNT(CASE 
+        WHEN i.message_direction = 'Inbound' THEN 1 
+    END) as inbound,
+COUNT(CASE 
+        WHEN i.message_direction = 'Outbound' THEN 1 
+    END) as outbound,
+COUNT(*) as total_interactions
+FROM interview.clients c
+JOIN interview.interactions i ON c.client_id = i.client_id
+WHERE i.timestamp >= DATE_SUB(CURRENT_DATE(), INTERVAL 2 YEAR)
+GROUP BY c.client_id, c.client_name
+ORDER BY total_interactions DESC
+LIMIT 5;
