@@ -18,3 +18,6 @@ The data set provided simulates real-world scenarios at Clickatell, including:
 or WhatsApp.
 3. Interactions: Logs of messages exchanged between clients and end users.
 4. Transactions: Financial transactions facilitated through our platform.
+
+Below contains the PowerBI Dashboard to the analysis
+![Akingbelure Adeboye Analyst Practise 2_page-0001](https://github.com/user-attachments/assets/e4d26a5f-4218-4ec0-a170-ca0309bc8591)
